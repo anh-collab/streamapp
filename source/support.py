@@ -1,35 +1,44 @@
 import streamlit as st
-from db import add_data,view_unique_value,get_value,view_data,edit_value,delete_value
 import pandas as pd
+
+from db import add_data, view_unique_value, get_value, view_data, edit_value, delete_value
+
 def add():
     st.subheader("Add Items")
-        #Layout:
-    col1,col2 = st.beta_columns(2)
+    # Layout:
+    col1, col2 = st.beta_columns(2)
+    
     with col1:
         value1 = st.text_area("Col 1")
+        
     with col2:
-        value2 = st.selectbox("Status",["Verified","Pending","False"])
+        value2 = st.selectbox("Status", ["Verified", "Pending", "False"])
         input_time = st.date_input("Time")
+        
     if st.button("Submit"):
-        add_data(value1,value2,input_time)
+        add_data(value1, value2, input_time)
         st.success("Successfully Sent Data:{}".format(value1))
 
 def update():
         st.subheader("Update Data")
-        col3,col4 = st.beta_columns(2)
+        col3, col4 = st.beta_columns(2)
+
         with st.beta_expander("View specific results"):
                df = pd.DataFrame(view_unique_value())
                st.write(df)
+
         with col3:
              value_needs_change = st.text_area("Value to change")
         with col4:
              change_to = st.text_area("The desired value")
+
         if st.button("Submit"):
              k = get_value(value_needs_change)
              for i in range(len(k)):
-                 changing_status=k[i][1]
+                 changing_status = k[i][1]
                  changing_date = k[i][2]
                  m = edit_value(value_needs_change,changing_status,changing_date,change_to)
+
              st.subheader("Changed data")
              result1 = view_data()
              df = pd.DataFrame(result1)
